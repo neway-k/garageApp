@@ -1,0 +1,29 @@
+"first_name": "jon",
+"last_name": "James",
+"email": "newksm21@gmil.com",
+"password": "1830421@newK"
+
+
+
+{
+  "first_name": "Neway",
+  "last_name": "K",
+  "email": "test@gmail.com",
+  "password": "123456"
+}
+
+
+
+
+public IPv4 address
+(13.60.25.59)
+
+(/home/ubuntu/ssh/id_ed25519.pub)
+
+
+
+alter user 'root'@'localhost' identified with mysql_native_password by 'GarageAppNewWay';
+
+
+
+terminal to install all configuration "https://eu-north-1.console.aws.amazon.com/ec2-instance-connect/ssh/home?addressFamily=ipv4&connType=standard&instanceId=i-01509e11578e7a79b&osUser=ubuntu&region=eu-north-1&sshPort=22"
