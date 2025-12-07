@@ -21,14 +21,11 @@ const AddEmployee = () => {
       password: password,
     };
     try {
-      const res = await fetch(
-        "http://http://13.60.25.59/:5000/employees/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(employeeData),
-        }
-      );
+      const res = await fetch("http://13.60.25.59:5000/employees/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(employeeData),
+      });
       const data = await res.json();
       console.log("Response from backend:", data);
       setResponseMessage({

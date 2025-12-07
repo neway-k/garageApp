@@ -17,14 +17,11 @@ const Login = () => {
       password: password,
     };
     try {
-      const res = await fetch(
-        "http://http://13.60.25.59/:5000/employees/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(loginData),
-        }
-      );
+      const res = await fetch("http://13.60.25.59:5000/employees/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+      });
       const data = await res.json();
       console.log("Response from backend:", data);
       setResponseMessage(data.message);
