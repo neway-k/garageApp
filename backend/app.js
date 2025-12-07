@@ -34,7 +34,8 @@ app.get("/", (req, res) => {
 
 // Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`Server running at http://13.60.25.59:${PORT}`)
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Server running at http://13.60.25.59
+:${PORT}`)
 );
 export default app;
