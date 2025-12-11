@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // <-- New
+
+const BASE_URL = "http://13.60.25.59:5000"; // Define base URL
 
 const AddEmployee = () => {
   // declare the state variable for each of the form fields
@@ -7,7 +10,8 @@ const AddEmployee = () => {
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [responseMessage, setResponseMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState(null);
+  const navigate = useNavigate(); // Hook for navigation
 
   // write a function to handle the form submission
   const handleSubmit = async (event) => {
@@ -20,19 +24,39 @@ const AddEmployee = () => {
       email: emailAddress,
       password: password,
     };
+    setResponseMessage(null); // Clear previous messages
     try {
-      const res = await fetch("http://13.60.25.59:5000/employees/register", {
+      const res = await fetch(`${BASE_URL}/employees/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(employeeData),
       });
       const data = await res.json();
       console.log("Response from backend:", data);
-      setResponseMessage({
-        status: "success",
-        first_name: data.first_name,
-        last_name: data.last_name,
-      });
+      if (res.ok) {
+        setResponseMessage({
+          status: "success",
+          message: data.message,
+          first_name: employeeData.first_name,
+          last_name: employeeData.last_name,
+        });
+        // Reset form fields
+        setFirstName("");
+        setLastName("");
+        setEmailAddress("");
+        setPassword("");
+        // OPTIONAL: Redirect after a few seconds
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
+      } else {
+        // Handle 400 or 409 errors from the backend
+        setResponseMessage({
+          status: "error",
+          message:
+            data.message || "Registration failed. Please check your data.",
+        });
+      }
     } catch (error) {
       console.error("Error submitting employee data:", error);
       setResponseMessage({
@@ -41,6 +65,7 @@ const AddEmployee = () => {
       });
     }
   };
+  const isFormValid = firstName && lastName && emailAddress && password;
 
   return (
     <div className="add-employee-form">
@@ -50,7 +75,7 @@ const AddEmployee = () => {
           <span className="success-name">
             {responseMessage.first_name} {responseMessage.last_name}
           </span>{" "}
-          added successfully!
+          added successfully! Redirecting to login...
         </div>
       )}
 
@@ -66,8 +91,9 @@ const AddEmployee = () => {
           id="fname"
           name="fname"
           value={firstName}
-          onChange={(event) => setFirstName(event.target.value)}
-        />{" "}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
         <br />
         <label htmlFor="lname">Last name:</label>
         <br />
@@ -76,7 +102,8 @@ const AddEmployee = () => {
           id="lname"
           name="lname"
           value={lastName}
-          onChange={(event) => setLastName(event.target.value)}
+          onChange={(e) => setLastName(e.target.value)}
+          required
         />
         <br />
         <label htmlFor="email">Email:</label> <br />
@@ -85,7 +112,8 @@ const AddEmployee = () => {
           id="email"
           name="email"
           value={emailAddress}
-          onChange={(event) => setEmailAddress(event.target.value)}
+          onChange={(e) => setEmailAddress(e.target.value)}
+          required
         />
         <br />
         <label htmlFor="password">Password:</label> <br />
@@ -94,15 +122,12 @@ const AddEmployee = () => {
           id="password"
           name="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <br />
         <br />
-        <input
-          type="submit"
-          value="Submit"
-          disabled={!firstName || !lastName || !emailAddress || !password}
-        />
+        <input type="submit" value="Submit" disabled={!isFormValid} />
       </form>
     </div>
   );
